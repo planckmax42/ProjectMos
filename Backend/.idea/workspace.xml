@@ -5,12 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c19afb05-3fef-49af-809e-088c632c6e7c" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/../A08 题目.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.cache/.Apifox_Helper/.toolWindow.db" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.cache/.Apifox_Helper/.toolWindow.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/common/ApiResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/common/ApiResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/common/GlobalExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/common/GlobalExceptionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/controller/EnergyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/controller/EnergyController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/dto/AnomalyDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/dto/AnomalyDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/dto/CopDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/dto/CopDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/dto/EnergyRecordRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/dto/EnergyRecordRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/dto/TimeSummaryDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/dto/TimeSummaryDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/Building.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/Building.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/EnergyRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/EnergyRecord.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/MonitorDevice.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/MonitorDevice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/service/EnergyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/service/EnergyService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/service/StatisticsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/service/StatisticsService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +120,7 @@
       <workItem from="1773747069673" duration="10000" />
       <workItem from="1773750196989" duration="186000" />
       <workItem from="1773800685237" duration="5000" />
-      <workItem from="1773823334267" duration="6299000" />
+      <workItem from="1773823334267" duration="8013000" />
     </task>
     <servers />
   </component>
