@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c19afb05-3fef-49af-809e-088c632c6e7c" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.cache/.Apifox_Helper/.toolWindow.db" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.cache/.Apifox_Helper/.toolWindow.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/Backend-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/backend/repository/EnergyRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/backend/repository/EnergyRecordRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/backend/service/EnergyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/backend/service/EnergyService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/common/ApiResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/common/ApiResponse.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/common/GlobalExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/common/GlobalExceptionHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/controller/EnergyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/controller/EnergyController.class" afterDir="false" />
@@ -20,8 +22,8 @@
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/Building.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/Building.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/EnergyRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/EnergyRecord.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/MonitorDevice.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/MonitorDevice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/repository/EnergyRecordRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/repository/EnergyRecordRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/service/EnergyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/service/EnergyService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/service/StatisticsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/service/StatisticsService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +36,7 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="16" />
+    <option name="cachedIndexableFilesCount" value="45" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -61,37 +63,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.Backend [clean].executor": "Run",
-    "Maven.Backend [install].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Notification.DisplayName-DoNotAsk-ProfilerNotification": "分析器问题",
-    "Notification.DoNotAsk-ProfilerNotification": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.BackendApplication.executor": "Run",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.Backend [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Backend [install].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-ProfilerNotification&quot;: &quot;分析器问题&quot;,
+    &quot;Notification.DoNotAsk-ProfilerNotification&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;/home/crane/.local/share/JetBrains/IntelliJIdea2025.3/Shell Script/shellcheck&quot;,
+    &quot;Spring Boot.BackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="Backend" />
@@ -120,7 +124,12 @@
       <workItem from="1773747069673" duration="10000" />
       <workItem from="1773750196989" duration="186000" />
       <workItem from="1773800685237" duration="5000" />
-      <workItem from="1773823334267" duration="8013000" />
+      <workItem from="1773823334267" duration="10481000" />
+      <workItem from="1773839320865" duration="699000" />
+      <workItem from="1773840230428" duration="2045000" />
+      <workItem from="1773842718277" duration="53000" />
+      <workItem from="1773842864978" duration="73000" />
+      <workItem from="1774147512416" duration="933000" />
     </task>
     <servers />
   </component>

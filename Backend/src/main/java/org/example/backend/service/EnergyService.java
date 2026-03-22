@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +51,16 @@ public class EnergyService {
 
     @Transactional
     public EnergyRecord createRecord(EnergyRecordRequest request) {
+        // 验证 building 是否存在
+        if (request.getBuildingId() == null || !buildingRepository.existsById(request.getBuildingId())) {
+            throw new IllegalArgumentException("建筑ID不存在: " + request.getBuildingId());
+        }
+
+        // 验证 device 是否存在
+        if (request.getDeviceId() == null || !deviceRepository.existsById(request.getDeviceId())) {
+            throw new IllegalArgumentException("设备ID不存在: " + request.getDeviceId());
+        }
+
         EnergyRecord record = new EnergyRecord();
         copyProperties(request, record);
         return recordRepository.save(record);
@@ -72,7 +84,28 @@ public class EnergyService {
             int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "recordTime"));
-        return recordRepository.findByConditions(buildingId, deviceId, startTime, endTime, deviceStatus, pageable);
+        Specification<EnergyRecord> specification = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (buildingId != null) {
+                predicates.add(cb.equal(root.get("buildingId"), buildingId));
+            }
+            if (deviceId != null) {
+                predicates.add(cb.equal(root.get("deviceId"), deviceId));
+            }
+            if (startTime != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("recordTime"), startTime));
+            }
+            if (endTime != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("recordTime"), endTime));
+            }
+            if (deviceStatus != null) {
+                predicates.add(cb.equal(root.get("deviceStatus"), deviceStatus));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        return recordRepository.findAll(specification, pageable);
     }
 
     @Transactional
@@ -109,7 +142,7 @@ public class EnergyService {
     private void copyProperties(EnergyRecordRequest request, EnergyRecord record) {
         record.setBuildingId(request.getBuildingId());
         record.setDeviceId(request.getDeviceId());
-        record.setRecordTime(request.getRecordTime());
+        record.setRecordTime(request.getRecordTime() != null ? request.getRecordTime() : LocalDateTime.now());
         record.setElectricityKwh(request.getElectricityKwh());
         record.setWaterM3(request.getWaterM3());
         record.setHvacKwh(request.getHvacKwh());
