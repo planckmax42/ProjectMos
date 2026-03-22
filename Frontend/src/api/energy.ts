@@ -4,75 +4,45 @@ import {
   EnergyRecordRequest,
   EnergyRecordQuery,
   PageResponse,
-  ApiResponse
+  ApiResponse,
+  Building,
+  MonitorDevice
 } from '@/types/api';
 
 const BASE_URL = '/api/energy';
 
 export const energyApi = {
-  // 创建能源记录
-  create(data: EnergyRecordRequest): Promise<ApiResponse<EnergyRecord>> {
-    return request.post(`${BASE_URL}/create`, data);
+  // 获取建筑列表 - GET /api/energy/buildings
+  getBuildings(): Promise<ApiResponse<Building[]>> {
+    return request.get(`${BASE_URL}/buildings`);
   },
 
-  // 批量创建能源记录
-  batchCreate(data: EnergyRecordRequest[]): Promise<ApiResponse<EnergyRecord[]>> {
-    return request.post(`${BASE_URL}/batch-create`, data);
+  // 获取设备列表 - GET /api/energy/devices
+  getDevices(buildingId?: number): Promise<ApiResponse<MonitorDevice[]>> {
+    return request.get(`${BASE_URL}/devices`, {
+      params: buildingId ? { buildingId } : undefined
+    });
   },
 
-  // 更新能源记录
-  update(id: number, data: Partial<EnergyRecordRequest>): Promise<ApiResponse<EnergyRecord>> {
-    return request.put(`${BASE_URL}/update/${id}`, data);
+  // 新增能耗记录 - POST /api/energy/records
+  createRecord(data: EnergyRecordRequest): Promise<ApiResponse<EnergyRecord>> {
+    return request.post(`${BASE_URL}/records`, data);
   },
 
-  // 删除能源记录
-  delete(id: number): Promise<ApiResponse<void>> {
-    return request.delete(`${BASE_URL}/delete/${id}`);
+  // 更新能耗记录 - PUT /api/energy/records/{id}
+  updateRecord(id: number, data: EnergyRecordRequest): Promise<ApiResponse<EnergyRecord>> {
+    return request.put(`${BASE_URL}/records/${id}`, data);
   },
 
-  // 获取单个能源记录
-  getById(id: number): Promise<ApiResponse<EnergyRecord>> {
-    return request.get(`${BASE_URL}/${id}`);
+  // 查询能耗记录（分页）- GET /api/energy/records
+  queryRecords(params: EnergyRecordQuery): Promise<ApiResponse<PageResponse<EnergyRecord>>> {
+    return request.get(`${BASE_URL}/records`, { params });
   },
 
-  // 分页查询能源记录
-  getPage(params: EnergyRecordQuery): Promise<ApiResponse<PageResponse<EnergyRecord>>> {
-    return request.get(`${BASE_URL}/page`, { params });
-  },
-
-  // 导入CSV文件
-  importCsv(file: File): Promise<ApiResponse<{ imported: number; failed: number; errors: string[] }>> {
+  // CSV导入 - POST /api/energy/import/csv
+  importCsv(file: File): Promise<ApiResponse<string>> {
     const formData = new FormData();
     formData.append('file', file);
-    return request.upload(`${BASE_URL}/import-csv`, formData);
-  },
-
-  // 获取最新记录
-  getLatest(buildingId: number, limit: number = 10): Promise<ApiResponse<EnergyRecord[]>> {
-    return request.get(`${BASE_URL}/latest`, {
-      params: { buildingId, limit }
-    });
-  },
-
-  // 按时间范围查询
-  getByTimeRange(
-    buildingId: number,
-    startTime: string,
-    endTime: string
-  ): Promise<ApiResponse<EnergyRecord[]>> {
-    return request.get(`${BASE_URL}/time-range`, {
-      params: { buildingId, startTime, endTime }
-    });
-  },
-
-  // 获取设备状态统计
-  getDeviceStatusStats(buildingId?: number): Promise<ApiResponse<{
-    normal: number;
-    abnormal: number;
-    offline: number;
-  }>> {
-    return request.get(`${BASE_URL}/device-status-stats`, {
-      params: { buildingId }
-    });
+    return request.upload(`${BASE_URL}/import/csv`, formData);
   }
 };

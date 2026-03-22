@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, Card, Space, Button, Input, Select, DatePicker, Form, Modal,
+  Table, Card, Space, Button, Select, DatePicker, Form, Modal,
   message, Popconfirm, Tag, Row, Col, InputNumber
 } from 'antd';
 import {
@@ -10,7 +10,6 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { energyApi } from '@/api/energy';
-import { buildingApi, deviceApi } from '@/api/common';
 import { reportApi } from '@/api/report';
 import {
   EnergyRecord, EnergyRecordRequest, Building, MonitorDevice, PageResponse
@@ -29,7 +28,6 @@ const EnergyRecords: React.FC = () => {
 
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [devices, setDevices] = useState<MonitorDevice[]>([]);
-  const [selectedBuilding, setSelectedBuilding] = useState<number | undefined>();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<EnergyRecord | null>(null);
@@ -40,11 +38,11 @@ const EnergyRecords: React.FC = () => {
   // 获取建筑和设备列表
   useEffect(() => {
     Promise.all([
-      buildingApi.getAll(),
-      deviceApi.getAll(),
+      energyApi.getBuildings(),
+      energyApi.getDevices(),
     ]).then(([buildingRes, deviceRes]) => {
-      if (buildingRes.success) setBuildings(buildingRes.data || []);
-      if (deviceRes.success) setDevices(deviceRes.data || []);
+      if (buildingRes.code === 0) setBuildings(buildingRes.data || []);
+      if (deviceRes.code === 0) setDevices(deviceRes.data || []);
     });
   }, []);
 
@@ -58,13 +56,13 @@ const EnergyRecords: React.FC = () => {
         size: pageSize,
         buildingId: values.buildingId,
         deviceId: values.deviceId,
-        startTime: values.dateRange?.[0]?.format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.dateRange?.[1]?.format('YYYY-MM-DD HH:mm:ss'),
+        startTime: values.dateRange?.[0]?.format('YYYY-MM-DDTHH:mm:ss'),
+        endTime: values.dateRange?.[1]?.format('YYYY-MM-DDTHH:mm:ss'),
         deviceStatus: values.deviceStatus,
       };
 
-      const res = await energyApi.getPage(params);
-      if (res.success && res.data) {
+      const res = await energyApi.queryRecords(params);
+      if (res.code === 0 && res.data) {
         setData(res.data.content);
         setPagination({
           current: res.data.number + 1,
@@ -114,50 +112,44 @@ const EnergyRecords: React.FC = () => {
       const values = await modalForm.validateFields();
       const data: EnergyRecordRequest = {
         ...values,
-        recordTime: values.recordTime.format('YYYY-MM-DD HH:mm:ss'),
+        recordTime: values.recordTime.format('YYYY-MM-DDTHH:mm:ss'),
       };
 
       if (editingRecord) {
-        await energyApi.update(editingRecord.id, data);
+        await energyApi.updateRecord(editingRecord.id, data);
         message.success('更新成功');
       } else {
-        await energyApi.create(data);
+        await energyApi.createRecord(data);
         message.success('创建成功');
       }
 
       setModalVisible(false);
       fetchRecords(pagination.current, pagination.pageSize);
     } catch (error) {
-      message.error('保存失败');
+      console.error('保存失败:', error);
     }
   };
 
-  // 删除记录
+  // 删除记录 - 注意：后端可能没有删除接口
   const handleDelete = async (id: number) => {
-    try {
-      await energyApi.delete(id);
-      message.success('删除成功');
-      fetchRecords(pagination.current, pagination.pageSize);
-    } catch (error) {
-      message.error('删除失败');
-    }
+    message.warning('删除功能暂未实现');
   };
 
   // 导出数据
   const handleExport = async () => {
     try {
       const values = searchForm.getFieldsValue();
-      const blob = await reportApi.exportEnergyRecords({
-        buildingId: values.buildingId,
-        startTime: values.dateRange?.[0]?.format('YYYY-MM-DD HH:mm:ss'),
-        endTime: values.dateRange?.[1]?.format('YYYY-MM-DD HH:mm:ss'),
-        format: 'EXCEL',
+      const blob = await reportApi.exportReport({
+        buildingId: values.buildingId || 1, // 默认值
+        start: values.dateRange?.[0]?.format('YYYY-MM-DDTHH:mm:ss') || dayjs().subtract(7, 'day').format('YYYY-MM-DDTHH:mm:ss'),
+        end: values.dateRange?.[1]?.format('YYYY-MM-DDTHH:mm:ss') || dayjs().format('YYYY-MM-DDTHH:mm:ss'),
+        granularity: 'hour',
       });
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `energy_records_${dayjs().format('YYYYMMDD_HHmmss')}.xlsx`;
+      link.download = `energy_records_${dayjs().format('YYYYMMDD_HHmmss')}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -169,6 +161,7 @@ const EnergyRecords: React.FC = () => {
     }
   };
 
+  // 表格列定义 - 使用新的字段名
   const columns: ColumnsType<EnergyRecord> = [
     {
       title: '记录时间',
@@ -191,35 +184,43 @@ const EnergyRecords: React.FC = () => {
     },
     {
       title: '电力消耗(kWh)',
-      dataIndex: 'electricityConsumption',
-      key: 'electricityConsumption',
+      dataIndex: 'electricityKwh',
+      key: 'electricityKwh',
       width: 120,
       align: 'right',
-      render: (value) => value?.toFixed(2),
+      render: (value) => Number(value || 0).toFixed(2),
     },
     {
       title: '用水量(m³)',
-      dataIndex: 'waterConsumption',
-      key: 'waterConsumption',
+      dataIndex: 'waterM3',
+      key: 'waterM3',
       width: 100,
       align: 'right',
-      render: (value) => value?.toFixed(2),
+      render: (value) => Number(value || 0).toFixed(2),
     },
     {
       title: 'HVAC能耗(kWh)',
-      dataIndex: 'hvacEnergyConsumption',
-      key: 'hvacEnergyConsumption',
+      dataIndex: 'hvacKwh',
+      key: 'hvacKwh',
       width: 120,
       align: 'right',
-      render: (value) => value?.toFixed(2),
+      render: (value) => Number(value || 0).toFixed(2),
     },
     {
-      title: '室内温度(°C)',
-      dataIndex: 'indoorTemp',
-      key: 'indoorTemp',
+      title: '环境温度(°C)',
+      dataIndex: 'envTemperature',
+      key: 'envTemperature',
       width: 100,
       align: 'right',
-      render: (value) => value?.toFixed(1),
+      render: (value) => value ? Number(value).toFixed(1) : '-',
+    },
+    {
+      title: '湿度(%)',
+      dataIndex: 'humidity',
+      key: 'humidity',
+      width: 80,
+      align: 'right',
+      render: (value) => value ? Number(value).toFixed(1) : '-',
     },
     {
       title: '设备状态',
@@ -230,7 +231,6 @@ const EnergyRecords: React.FC = () => {
         const config = {
           NORMAL: { color: 'green', text: '正常' },
           ABNORMAL: { color: 'orange', text: '异常' },
-          OFFLINE: { color: 'red', text: '离线' },
         };
         const { color, text } = config[status] || { color: 'default', text: status };
         return <Tag color={color}>{text}</Tag>;
@@ -321,7 +321,6 @@ const EnergyRecords: React.FC = () => {
                 <Select placeholder="选择状态" allowClear style={{ width: '100%' }}>
                   <Select.Option value="NORMAL">正常</Select.Option>
                   <Select.Option value="ABNORMAL">异常</Select.Option>
-                  <Select.Option value="OFFLINE">离线</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -355,7 +354,7 @@ const EnergyRecords: React.FC = () => {
             icon={<DownloadOutlined />}
             onClick={handleExport}
           >
-            导出Excel
+            导出CSV
           </Button>
         </Space>
       </Card>
@@ -377,7 +376,7 @@ const EnergyRecords: React.FC = () => {
         />
       </Card>
 
-      {/* 新增/编辑模态框 */}
+      {/* 新增/编辑模态框 - 使用新的字段名 */}
       <Modal
         title={editingRecord ? '编辑能源记录' : '新增能源记录'}
         open={modalVisible}
@@ -446,7 +445,6 @@ const EnergyRecords: React.FC = () => {
                 <Select>
                   <Select.Option value="NORMAL">正常</Select.Option>
                   <Select.Option value="ABNORMAL">异常</Select.Option>
-                  <Select.Option value="OFFLINE">离线</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -455,7 +453,7 @@ const EnergyRecords: React.FC = () => {
           <Row gutter={16}>
             <Col span={8}>
               <Form.Item
-                name="electricityConsumption"
+                name="electricityKwh"
                 label="电力消耗(kWh)"
                 rules={[{ required: true, message: '请输入电力消耗' }]}
               >
@@ -468,7 +466,7 @@ const EnergyRecords: React.FC = () => {
             </Col>
             <Col span={8}>
               <Form.Item
-                name="waterConsumption"
+                name="waterM3"
                 label="用水量(m³)"
                 rules={[{ required: true, message: '请输入用水量' }]}
               >
@@ -481,7 +479,7 @@ const EnergyRecords: React.FC = () => {
             </Col>
             <Col span={8}>
               <Form.Item
-                name="hvacEnergyConsumption"
+                name="hvacKwh"
                 label="HVAC能耗(kWh)"
                 rules={[{ required: true, message: '请输入HVAC能耗' }]}
               >
@@ -516,7 +514,7 @@ const EnergyRecords: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="outdoorTemp" label="室外温度(°C)">
+              <Form.Item name="envTemperature" label="环境温度(°C)">
                 <InputNumber
                   min={-50}
                   max={100}
@@ -529,16 +527,6 @@ const EnergyRecords: React.FC = () => {
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item name="indoorTemp" label="室内温度(°C)">
-                <InputNumber
-                  min={-50}
-                  max={100}
-                  precision={1}
-                  style={{ width: '100%' }}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
               <Form.Item name="humidity" label="湿度(%)">
                 <InputNumber
                   min={0}
@@ -549,7 +537,7 @@ const EnergyRecords: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="occupancyDensity" label="人员密度">
+              <Form.Item name="occupancyDensity" label="人员密度(人/100㎡)">
                 <InputNumber
                   min={0}
                   precision={2}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Statistic, Space, Select, DatePicker, Spin } from 'antd';
+import { Row, Col, Card, Statistic, Space, Select, DatePicker, Spin, message } from 'antd';
 import {
   ThunderboltOutlined,
   AlertOutlined,
@@ -11,8 +11,7 @@ import type { EChartsOption } from 'echarts';
 import dayjs from 'dayjs';
 import { energyApi } from '@/api/energy';
 import { statisticsApi } from '@/api/statistics';
-import { buildingApi } from '@/api/common';
-import { Building, TimeSummaryDto } from '@/types/api';
+import type { Building, TimeSummaryDto, StatisticsQuery } from '@/types/api';
 
 const { RangePicker } = DatePicker;
 
@@ -35,21 +34,18 @@ const Dashboard: React.FC = () => {
   });
 
   const [chartData, setChartData] = useState<TimeSummaryDto[]>([]);
-  const [deviceStatus, setDeviceStatus] = useState({
-    normal: 0,
-    abnormal: 0,
-    offline: 0,
-  });
 
   // 获取建筑列表
   useEffect(() => {
-    buildingApi.getAll().then(res => {
-      if (res.success && res.data) {
+    energyApi.getBuildings().then(res => {
+      if (res.code === 0 && res.data) {
         setBuildings(res.data);
         if (res.data.length > 0) {
           setSelectedBuilding(res.data[0].id);
         }
       }
+    }).catch(err => {
+      message.error('获取建筑列表失败');
     });
   }, []);
 
@@ -61,30 +57,40 @@ const Dashboard: React.FC = () => {
   }, [selectedBuilding, dateRange]);
 
   const fetchDashboardData = async () => {
+    if (!selectedBuilding) return;
+
     setLoading(true);
     try {
       const [startTime, endTime] = dateRange;
-      const params = {
+
+      // 构造符合后端要求的参数
+      const statsParams: StatisticsQuery = {
         buildingId: selectedBuilding,
-        startTime: startTime.format('YYYY-MM-DD HH:mm:ss'),
-        endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
+        start: startTime.format('YYYY-MM-DDTHH:mm:ss'),  // ISO-8601格式
+        end: endTime.format('YYYY-MM-DDTHH:mm:ss'),
+        granularity: 'day'  // 小写
+      };
+
+      const anomalyParams = {
+        buildingId: selectedBuilding,
+        start: startTime.format('YYYY-MM-DDTHH:mm:ss'),
+        end: endTime.format('YYYY-MM-DDTHH:mm:ss'),
       };
 
       // 并行获取多个数据
-      const [summaryRes, anomalyRes, deviceStatusRes] = await Promise.all([
-        statisticsApi.getTimeSummary({ ...params, groupBy: 'DAY' }),
-        statisticsApi.getAnomalies(params),
-        energyApi.getDeviceStatusStats(selectedBuilding),
+      const [summaryRes, anomalyRes] = await Promise.all([
+        statisticsApi.getTimeSummary(statsParams),
+        statisticsApi.getAnomalyAnalysis(anomalyParams),
       ]);
 
-      // 处理汇总数据
-      if (summaryRes.success && summaryRes.data) {
+      // 处理汇总数据 - 使用正确的字段名
+      if (summaryRes.code === 0 && summaryRes.data) {
         setChartData(summaryRes.data);
 
         const totals = summaryRes.data.reduce((acc, item) => ({
-          electricity: acc.electricity + item.totalElectricity,
-          water: acc.water + item.totalWater,
-          hvac: acc.hvac + item.totalHvacEnergy,
+          electricity: acc.electricity + Number(item.electricityKwh || 0),
+          water: acc.water + Number(item.waterM3 || 0),
+          hvac: acc.hvac + Number(item.hvacKwh || 0),
         }), { electricity: 0, water: 0, hvac: 0 });
 
         // 计算趋势（比较前后两半时间段）
@@ -92,39 +98,41 @@ const Dashboard: React.FC = () => {
         const firstHalf = summaryRes.data.slice(0, mid);
         const secondHalf = summaryRes.data.slice(mid);
 
-        const firstElec = firstHalf.reduce((sum, item) => sum + item.totalElectricity, 0);
-        const secondElec = secondHalf.reduce((sum, item) => sum + item.totalElectricity, 0);
-        const firstWater = firstHalf.reduce((sum, item) => sum + item.totalWater, 0);
-        const secondWater = secondHalf.reduce((sum, item) => sum + item.totalWater, 0);
+        const firstElec = firstHalf.reduce((sum, item) => sum + Number(item.electricityKwh || 0), 0);
+        const secondElec = secondHalf.reduce((sum, item) => sum + Number(item.electricityKwh || 0), 0);
+        const firstWater = firstHalf.reduce((sum, item) => sum + Number(item.waterM3 || 0), 0);
+        const secondWater = secondHalf.reduce((sum, item) => sum + Number(item.waterM3 || 0), 0);
 
         setStats({
           totalElectricity: totals.electricity,
           totalWater: totals.water,
           totalHvac: totals.hvac,
-          anomalyCount: anomalyRes.data?.length || 0,
+          anomalyCount: anomalyRes.code === 0 ? (anomalyRes.data?.length || 0) : 0,
           electricityTrend: firstElec ? ((secondElec - firstElec) / firstElec) * 100 : 0,
           waterTrend: firstWater ? ((secondWater - firstWater) / firstWater) * 100 : 0,
         });
       }
-
-      // 设备状态
-      if (deviceStatusRes.success && deviceStatusRes.data) {
-        setDeviceStatus(deviceStatusRes.data);
-      }
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
+      message.error('获取统计数据失败');
     } finally {
       setLoading(false);
     }
   };
 
-  // 电力消耗趋势图配置
-  const electricityChartOption: EChartsOption = {
+  // 电力消耗趋势图配置 - 使用正确的字段名
+  const electricityChartOption: EChartsOption = chartData.length > 0 ? {
     title: { text: '电力消耗趋势' },
-    tooltip: { trigger: 'axis' },
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params: any) => {
+        const data = params[0];
+        return `${data.name}<br/>${data.seriesName}: ${data.value?.toFixed(2)} kWh`;
+      }
+    },
     xAxis: {
       type: 'category',
-      data: chartData.map(item => dayjs(item.period).format('MM-DD')),
+      data: chartData.map(item => dayjs(item.timeBucket).format('MM-DD')),
     },
     yAxis: {
       type: 'value',
@@ -134,7 +142,7 @@ const Dashboard: React.FC = () => {
       name: '电力消耗',
       type: 'line',
       smooth: true,
-      data: chartData.map(item => item.totalElectricity),
+      data: chartData.map(item => Number(item.electricityKwh || 0)),
       itemStyle: { color: '#1890ff' },
       areaStyle: {
         color: {
@@ -148,7 +156,7 @@ const Dashboard: React.FC = () => {
       },
     }],
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-  };
+  } : {};
 
   // 能源类型分布饼图
   const energyDistributionOption: EChartsOption = {
@@ -188,32 +196,6 @@ const Dashboard: React.FC = () => {
         { value: stats.totalHvac, name: 'HVAC', itemStyle: { color: '#fa8c16' } },
       ],
     }],
-  };
-
-  // 设备状态图表
-  const deviceStatusOption: EChartsOption = {
-    title: { text: '设备状态' },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' },
-    },
-    xAxis: {
-      type: 'value',
-    },
-    yAxis: {
-      type: 'category',
-      data: ['正常', '异常', '离线'],
-    },
-    series: [{
-      type: 'bar',
-      data: [
-        { value: deviceStatus.normal, itemStyle: { color: '#52c41a' } },
-        { value: deviceStatus.abnormal, itemStyle: { color: '#fa8c16' } },
-        { value: deviceStatus.offline, itemStyle: { color: '#f5222d' } },
-      ],
-      barWidth: 30,
-    }],
-    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
   };
 
   return (
@@ -334,16 +316,10 @@ const Dashboard: React.FC = () => {
         </Row>
 
         <Row gutter={16}>
-          <Col span={8}>
-            <Card>
-              <ReactECharts option={deviceStatusOption} style={{ height: 250 }} />
-            </Card>
-          </Col>
-          <Col span={16}>
-            <Card title="实时告警" extra={<a href="/statistics/anomaly">查看全部</a>}>
-              {/* 这里可以添加实时告警列表 */}
-              <div style={{ height: 210, overflow: 'auto' }}>
-                暂无告警信息
+          <Col span={24}>
+            <Card title="数据趋势分析">
+              <div style={{ padding: 20, textAlign: 'center', color: '#999' }}>
+                选择建筑和时间范围查看详细趋势
               </div>
             </Card>
           </Col>

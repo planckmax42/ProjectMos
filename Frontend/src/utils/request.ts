@@ -1,10 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { message } from 'antd';
-import { ApiResponse } from '../types/api';
+import type { ApiResponse } from '../types/api';
 
 // 创建axios实例
 const instance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8888',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',  // 端口改为8080
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -33,12 +34,17 @@ instance.interceptors.response.use(
     const res = response.data;
 
     // 如果是文件下载，直接返回
-    if (response.config.responseType === 'blob') {
+    if (response.config.responseType === 'blob' ||
+        response.config.responseType === 'arraybuffer' ||
+        response.headers['content-type']?.includes('text/csv')) {
       return response;
     }
 
-    // 业务错误处理
-    if (res.success === false) {
+    // 处理标准业务响应 (code: 0成功, 1失败)
+    if (res.code === 0) {
+      return response;
+    } else {
+      // code为1或其他非0值，表示业务错误
       message.error(res.message || '操作失败');
       return Promise.reject(new Error(res.message || 'Error'));
     }

@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c19afb05-3fef-49af-809e-088c632c6e7c" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.cache/.Apifox_Helper/.toolWindow.db" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.cache/.Apifox_Helper/.toolWindow.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/backend/repository/EnergyRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/backend/repository/EnergyRecordRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/backend/service/EnergyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/backend/service/EnergyService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/common/ApiResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/common/ApiResponse.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/common/GlobalExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/common/GlobalExceptionHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/controller/EnergyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/controller/EnergyController.class" afterDir="false" />
@@ -22,8 +17,17 @@
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/Building.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/Building.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/EnergyRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/EnergyRecord.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/entity/MonitorDevice.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/entity/MonitorDevice.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/repository/EnergyRecordRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/repository/EnergyRecordRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/backend/service/EnergyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/backend/service/EnergyService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/api/common.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/api/common.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/api/energy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/api/energy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/api/report.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/api/report.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/api/statistics.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/api/statistics.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/pages/statistics/TrendAnalysis.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/pages/statistics/TrendAnalysis.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/utils/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/utils/request.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +40,7 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="45" />
+    <option name="cachedIndexableFilesCount" value="47" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -130,6 +134,8 @@
       <workItem from="1773842718277" duration="53000" />
       <workItem from="1773842864978" duration="73000" />
       <workItem from="1774147512416" duration="933000" />
+      <workItem from="1774167192528" duration="381000" />
+      <workItem from="1774167694736" duration="252000" />
     </task>
     <servers />
   </component>

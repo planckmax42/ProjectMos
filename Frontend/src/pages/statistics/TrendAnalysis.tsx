@@ -6,7 +6,7 @@ import type { EChartsOption } from 'echarts';
 import dayjs from 'dayjs';
 import { statisticsApi } from '@/api/statistics';
 import { buildingApi } from '@/api/common';
-import { Building } from '@/types/api';
+import type { Building } from '@/types/api';
 
 const { RangePicker } = DatePicker;
 

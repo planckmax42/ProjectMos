@@ -1,6 +1,7 @@
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/BackendApplication.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/common/ApiResponse.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/common/GlobalExceptionHandler.java
+/home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/config/CorsConfig.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/controller/EnergyController.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/controller/ReportController.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/controller/StatisticsController.java

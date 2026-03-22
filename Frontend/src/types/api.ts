@@ -1,20 +1,17 @@
-// API Response Types
+// API Response Types - 与后端保持完全一致
 export interface ApiResponse<T = any> {
-  success: boolean;
+  code: number;  // 0表示成功，1表示失败
   message: string;
   data: T;
-  timestamp?: string;
 }
 
-// Building Types
+// Building Types - 与后端entity匹配
 export interface Building {
   id: number;
   buildingCode: string;
   buildingType: string;
   buildingName: string;
-  totalArea: number;
-  createdAt?: string;
-  updatedAt?: string;
+  area: number;  // 后端使用area而不是totalArea
 }
 
 // Monitor Device Types
@@ -26,111 +23,115 @@ export interface MonitorDevice {
   installLocation: string;
   buildingId: number;
   building?: Building;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
-// Energy Record Types
+// Energy Record Types - 与后端字段完全匹配
 export interface EnergyRecord {
   id: number;
   buildingId: number;
   building?: Building;
   deviceId: number;
   device?: MonitorDevice;
-  recordTime: string;
-  electricityConsumption: number;
-  waterConsumption: number;
-  hvacEnergyConsumption: number;
-  hvacSupplyTemp?: number;
-  hvacReturnTemp?: number;
-  outdoorTemp?: number;
-  indoorTemp?: number;
-  humidity?: number;
-  occupancyDensity?: number;
-  deviceStatus: 'NORMAL' | 'ABNORMAL' | 'OFFLINE';
-  createdAt?: string;
-  updatedAt?: string;
+  recordTime: string;  // ISO-8601格式
+  electricityKwh: number;  // 电耗 kWh
+  waterM3: number;  // 水耗 m³
+  hvacKwh: number;  // 空调能耗 kWh
+  hvacSupplyTemp?: number;  // 供水温度 ℃
+  hvacReturnTemp?: number;  // 回水温度 ℃
+  envTemperature?: number;  // 环境温度 ℃ (后端用envTemperature不是outdoorTemp)
+  humidity?: number;  // 湿度 %
+  occupancyDensity?: number;  // 人员密度 人/100㎡
+  deviceStatus: 'NORMAL' | 'ABNORMAL';  // 设备状态
 }
 
-// Energy Record Request DTO
+// Energy Record Request DTO - 与后端完全匹配
 export interface EnergyRecordRequest {
   buildingId: number;
   deviceId: number;
-  recordTime: string;
-  electricityConsumption: number;
-  waterConsumption: number;
-  hvacEnergyConsumption: number;
+  recordTime: string;  // ISO-8601格式 例如: 2026-03-18T10:00:00
+  electricityKwh: number;
+  waterM3: number;
+  hvacKwh: number;
   hvacSupplyTemp?: number;
   hvacReturnTemp?: number;
-  outdoorTemp?: number;
-  indoorTemp?: number;
+  envTemperature?: number;
   humidity?: number;
   occupancyDensity?: number;
-  deviceStatus?: 'NORMAL' | 'ABNORMAL' | 'OFFLINE';
+  deviceStatus?: 'NORMAL' | 'ABNORMAL';
 }
 
-// Statistics DTOs
+// Statistics DTOs - 与后端完全匹配
 export interface TimeSummaryDto {
-  period: string;
-  totalElectricity: number;
-  totalWater: number;
-  totalHvacEnergy: number;
-  avgOutdoorTemp?: number;
-  avgIndoorTemp?: number;
-  recordCount: number;
+  timeBucket: string;  // 时间段，格式根据granularity决定
+  electricityKwh: number;
+  waterM3: number;
+  hvacKwh: number;
 }
 
 export interface CopDto {
-  buildingId: number;
-  buildingName: string;
-  period: string;
+  timeBucket: string;
   cop: number;
-  totalHvacEnergy: number;
-  avgSupplyTemp?: number;
-  avgReturnTemp?: number;
 }
 
 export interface AnomalyDto {
   recordId: number;
-  buildingName: string;
-  deviceName: string;
   recordTime: string;
-  anomalyType: string;
-  anomalyValue: number;
-  threshold: number;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH';
+  electricityKwh: number;
+  zScore: number;  // Z-Score值
+  changeRate: number;  // 变化率
 }
 
 // Query Parameters
 export interface PageParams {
-  page?: number;
-  size?: number;
-  sort?: string;
+  page?: number;  // 页码，从0开始
+  size?: number;  // 每页大小，默认50
 }
 
+// Energy Record Query Parameters
 export interface EnergyRecordQuery extends PageParams {
   buildingId?: number;
   deviceId?: number;
-  startTime?: string;
-  endTime?: string;
-  deviceStatus?: 'NORMAL' | 'ABNORMAL' | 'OFFLINE';
+  startTime?: string;  // ISO-8601格式
+  endTime?: string;    // ISO-8601格式
+  deviceStatus?: 'NORMAL' | 'ABNORMAL';
 }
 
+// Statistics Query Parameters - 与后端完全匹配
 export interface StatisticsQuery {
-  buildingId?: number;
-  startTime: string;
-  endTime: string;
-  groupBy?: 'HOUR' | 'DAY' | 'MONTH';
+  buildingId: number;  // 必需
+  start: string;  // ISO-8601格式
+  end: string;    // ISO-8601格式
+  granularity: 'hour' | 'day' | 'month';  // 小写
 }
 
-// Page Response
+// Page Response - Spring Data分页响应
 export interface PageResponse<T> {
   content: T[];
   totalElements: number;
   totalPages: number;
   size: number;
-  number: number;
+  number: number;  // 当前页码，从0开始
   first: boolean;
   last: boolean;
   numberOfElements: number;
+  empty: boolean;
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      sorted: boolean;
+      ascending: boolean;
+      descending: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+}
+
+// CSV Import Result
+export interface ImportResult {
+  imported: number;
+  failed: number;
+  errors?: string[];
 }

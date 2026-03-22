@@ -3,6 +3,7 @@ org/example/backend/repository/EnergyRecordRepository.class
 org/example/backend/repository/BuildingRepository.class
 org/example/backend/dto/AnomalyDto.class
 org/example/backend/dto/CopDto.class
+org/example/backend/config/CorsConfig.class
 org/example/backend/BackendApplication.class
 org/example/backend/common/GlobalExceptionHandler.class
 org/example/backend/service/StatisticsService.class
