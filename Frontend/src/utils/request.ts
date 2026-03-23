@@ -48,8 +48,6 @@ instance.interceptors.response.use(
       message.error(res.message || '操作失败');
       return Promise.reject(new Error(res.message || 'Error'));
     }
-
-    return response;
   },
   (error) => {
     console.error('Response error:', error);
@@ -96,6 +94,10 @@ class HttpRequest {
 
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     return instance.put(url, data, config).then(res => res.data);
+  }
+
+  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return instance.patch(url, data, config).then(res => res.data);
   }
 
   delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {

@@ -20,6 +20,8 @@ const { RangePicker } = DatePicker;
 const EnergyRecords: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<EnergyRecord[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [batchDeleting, setBatchDeleting] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -64,6 +66,8 @@ const EnergyRecords: React.FC = () => {
       const res = await energyApi.queryRecords(params);
       if (res.code === 0 && res.data) {
         setData(res.data.content);
+        // 翻页或筛选后清空勾选，避免误删上一批选择
+        setSelectedRowKeys([]);
         setPagination({
           current: res.data.number + 1,
           pageSize: res.data.size,
@@ -143,6 +147,37 @@ const EnergyRecords: React.FC = () => {
       fetchRecords(targetPage, pagination.pageSize);
     } catch (error) {
       message.error('删除失败');
+    }
+  };
+
+  // 批量删除记录（复用单条删除接口）
+  const handleBatchDelete = async () => {
+    if (selectedRowKeys.length === 0) {
+      return;
+    }
+
+    setBatchDeleting(true);
+    try {
+      const ids = selectedRowKeys.map((key) => Number(key));
+      const results = await Promise.allSettled(ids.map((id) => energyApi.deleteRecord(id)));
+
+      const successCount = results.filter((item) => item.status === 'fulfilled').length;
+      const failedCount = ids.length - successCount;
+
+      if (successCount > 0) {
+        message.success(`成功删除 ${successCount} 条记录`);
+      }
+      if (failedCount > 0) {
+        message.warning(`${failedCount} 条记录删除失败，请重试`);
+      }
+
+      if (successCount > 0) {
+        const shouldFallbackPage = pagination.current > 1 && successCount >= data.length;
+        const targetPage = shouldFallbackPage ? pagination.current - 1 : pagination.current;
+        fetchRecords(targetPage, pagination.pageSize);
+      }
+    } finally {
+      setBatchDeleting(false);
     }
   };
 
@@ -367,6 +402,22 @@ const EnergyRecords: React.FC = () => {
           >
             导出CSV
           </Button>
+          <Popconfirm
+            title={`确定批量删除已选的 ${selectedRowKeys.length} 条记录吗？`}
+            onConfirm={handleBatchDelete}
+            okText="确定"
+            cancelText="取消"
+            disabled={selectedRowKeys.length === 0}
+          >
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              loading={batchDeleting}
+              disabled={selectedRowKeys.length === 0}
+            >
+              批量删除{selectedRowKeys.length > 0 ? `(${selectedRowKeys.length})` : ''}
+            </Button>
+          </Popconfirm>
         </Space>
       </Card>
 
@@ -376,6 +427,10 @@ const EnergyRecords: React.FC = () => {
           columns={columns}
           dataSource={data}
           rowKey="id"
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (keys) => setSelectedRowKeys(keys),
+          }}
           loading={loading}
           pagination={{
             ...pagination,

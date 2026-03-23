@@ -2,6 +2,7 @@ org/example/backend/ai/service/ConversationService.class
 org/example/backend/ai/retrieval/impl/DocumentProcessorImpl.class
 org/example/backend/ai/retrieval/impl/HybridSearchServiceImpl.class
 org/example/backend/ai/model/es/KnowledgeChunk.class
+org/example/backend/entity/ReportScheduleRunHistory.class
 org/example/backend/ai/model/dto/ChatStreamEvent.class
 org/example/backend/ai/service/impl/ConversationServiceImpl.class
 org/example/backend/service/StatisticsService.class
@@ -26,7 +27,9 @@ org/example/backend/ai/config/DashScopeProperties.class
 org/example/backend/ai/prompt/RagPromptBuilder.class
 org/example/backend/ai/retrieval/impl/KnowledgeIndexServiceImpl.class
 org/example/backend/ai/service/KnowledgeBaseService.class
+org/example/backend/dto/ReportScheduleRequest.class
 org/example/backend/ai/model/entity/ConversationMessage.class
+org/example/backend/dto/ScheduleRunDto.class
 org/example/backend/ai/config/ElasticsearchConfig.class
 org/example/backend/ai/mcp/McpToolCaller$ToolResult.class
 org/example/backend/controller/EnergyController.class
@@ -38,7 +41,9 @@ org/example/backend/dto/TimeSummaryDto.class
 org/example/backend/ai/config/AiProperties.class
 org/example/backend/repository/EnergyRecordRepository.class
 org/example/backend/repository/BuildingRepository.class
+org/example/backend/dto/ScheduleRunHistoryDto.class
 org/example/backend/ai/service/impl/KnowledgeBaseServiceImpl.class
+org/example/backend/repository/ReportScheduleRepository.class
 org/example/backend/ai/llm/LlmClient.class
 org/example/backend/ai/model/dto/ChatResponse.class
 org/example/backend/dto/CopDto.class
@@ -56,8 +61,12 @@ org/example/backend/ai/retrieval/HybridSearchService.class
 org/example/backend/ai/service/impl/ChatServiceImpl.class
 org/example/backend/ai/mcp/McpToolCaller.class
 org/example/backend/common/ApiResponse.class
+org/example/backend/dto/ReportScheduleDto.class
+org/example/backend/repository/ReportScheduleRunHistoryRepository.class
+org/example/backend/service/ReportScheduleDispatcher.class
 org/example/backend/service/ReportService.class
 org/example/backend/entity/Building.class
+org/example/backend/entity/ReportSchedule.class
 org/example/backend/ai/model/dto/ConversationVO.class
 org/example/backend/service/EnergyService.class
 org/example/backend/ai/model/dto/KnowledgeUploadRequest.class

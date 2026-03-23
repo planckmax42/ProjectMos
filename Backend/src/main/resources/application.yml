@@ -32,6 +32,9 @@ springdoc:
     path: /swagger-ui.html
 
 bems:
+  report-schedule:
+    enabled: ${BEMS_REPORT_SCHEDULE_ENABLED:true}
+    cron: ${BEMS_REPORT_SCHEDULE_CRON:0 * * * * *}
   ai:
     mock: ${BEMS_AI_MOCK:false}
     enable-knowledge-base: ${BEMS_AI_ENABLE_KB:false}
