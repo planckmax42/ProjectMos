@@ -4,12 +4,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "bems.rag")
 public class RagProperties {
-    private String indexName;
-    private int topK;
-    private int chunkSize;
-    private int chunkOverlap;
-    private double scoreThreshold;
-    private int maxConversationTurns;
+    private String indexName = "energy-knowledge";
+    private int topK = 5;
+    private int chunkSize = 500;
+    private int chunkOverlap = 100;
+    private double scoreThreshold = 0.2;
+    private int maxConversationTurns = 10;
 
     public String getIndexName() { return indexName; }
     public void setIndexName(String indexName) { this.indexName = indexName; }

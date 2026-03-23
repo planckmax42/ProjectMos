@@ -1,0 +1,13 @@
+bems:
+  ai:
+    mock: false
+    enable-knowledge-base: false
+  deepseek:
+    # 直接在这里填写你的Key
+    api-key: "sk-a8ed0b82f0cd4aab9255be9983e2265d"
+    # DeepSeek官方地址
+    base-url: "https://api.deepseek.com"
+    # 可选: deepseek-chat / deepseek-reasoner
+    model: "deepseek-chat"
+    temperature: 0.2
+    max-tokens: 1024

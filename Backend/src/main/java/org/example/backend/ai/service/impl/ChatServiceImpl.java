@@ -1,5 +1,6 @@
 package org.example.backend.ai.service.impl;
 
+import org.example.backend.ai.config.AiProperties;
 import org.example.backend.ai.config.RagProperties;
 import org.example.backend.ai.llm.LlmClient;
 import org.example.backend.ai.mcp.McpToolCaller;
@@ -32,6 +33,7 @@ public class ChatServiceImpl implements ChatService {
     private final LlmClient llmClient;
     private final McpToolCaller mcpToolCaller;
     private final RagProperties ragProperties;
+    private final AiProperties aiProperties;
 
     public ChatServiceImpl(
             ConversationService conversationService,
@@ -40,7 +42,8 @@ public class ChatServiceImpl implements ChatService {
             RagPromptBuilder promptBuilder,
             LlmClient llmClient,
             McpToolCaller mcpToolCaller,
-            RagProperties ragProperties) {
+            RagProperties ragProperties,
+            AiProperties aiProperties) {
         this.conversationService = conversationService;
         this.embeddingService = embeddingService;
         this.hybridSearchService = hybridSearchService;
@@ -48,6 +51,7 @@ public class ChatServiceImpl implements ChatService {
         this.llmClient = llmClient;
         this.mcpToolCaller = mcpToolCaller;
         this.ragProperties = ragProperties;
+        this.aiProperties = aiProperties;
     }
 
     @Override
@@ -56,8 +60,17 @@ public class ChatServiceImpl implements ChatService {
         conversationService.saveMessage(conversationId, "user", request.getQuestion());
 
         List<ConversationMessage> history = conversationService.getRecentHistory(conversationId, ragProperties.getMaxConversationTurns());
-        List<KnowledgeChunk> chunks = resolveChunks(request);
+        boolean useKnowledgeBase = request.isUseKnowledgeBase() && aiProperties.isEnableKnowledgeBase();
+        List<KnowledgeChunk> chunks = resolveChunks(request.getQuestion(), useKnowledgeBase);
         List<String> sources = chunks.stream().map(c -> c.getTitle() + "#" + c.getChunkIndex()).toList();
+
+        if (aiProperties.isMock()) {
+            String answer = buildMockAnswer(request.getQuestion(), useKnowledgeBase, sources);
+            conversationService.saveMessage(conversationId, "assistant", answer);
+            Flux<ChatStreamEvent> sourceEvent = Flux.just(ChatStreamEvent.sources(sources));
+            Flux<ChatStreamEvent> tokenEvents = Flux.fromIterable(splitByLength(answer, 24)).map(ChatStreamEvent::token);
+            return Flux.concat(sourceEvent, tokenEvents, Flux.just(ChatStreamEvent.done()));
+        }
 
         StringBuilder output = new StringBuilder();
         Flux<ChatStreamEvent> sourceEvent = Flux.just(ChatStreamEvent.sources(sources));
@@ -79,23 +92,38 @@ public class ChatServiceImpl implements ChatService {
         conversationService.saveMessage(conversationId, "user", request.getQuestion());
 
         List<ConversationMessage> history = conversationService.getRecentHistory(conversationId, ragProperties.getMaxConversationTurns());
-        List<KnowledgeChunk> chunks = resolveChunks(request);
-
-        String answer = llmClient.sendMessage(promptBuilder.build(request.getQuestion(), chunks, history));
-        conversationService.saveMessage(conversationId, "assistant", answer);
-
+        boolean useKnowledgeBase = request.isUseKnowledgeBase() && aiProperties.isEnableKnowledgeBase();
+        List<KnowledgeChunk> chunks = resolveChunks(request.getQuestion(), useKnowledgeBase);
         List<String> sources = chunks.stream().map(c -> c.getTitle() + "#" + c.getChunkIndex()).toList();
+
+        if (aiProperties.isMock()) {
+            String answer = buildMockAnswer(request.getQuestion(), useKnowledgeBase, sources);
+            conversationService.saveMessage(conversationId, "assistant", answer);
+            return new ChatResponse(conversationId, answer, sources);
+        }
+
+        String answer;
+        try {
+            answer = llmClient.sendMessage(promptBuilder.build(request.getQuestion(), chunks, history));
+        } catch (Exception ex) {
+            answer = "AI 调用失败，请检查 API Key/网络配置。错误信息: " + ex.getMessage();
+        }
+        conversationService.saveMessage(conversationId, "assistant", answer);
         return new ChatResponse(conversationId, answer, sources);
     }
 
-    private List<KnowledgeChunk> resolveChunks(ChatRequest request) {
+    private List<KnowledgeChunk> resolveChunks(String question, boolean useKnowledgeBase) {
         List<KnowledgeChunk> chunks = new ArrayList<>();
-        if (request.isUseKnowledgeBase()) {
-            float[] vector = embeddingService.embed(request.getQuestion());
-            chunks.addAll(hybridSearchService.search(request.getQuestion(), vector, ragProperties.getTopK()));
+        if (useKnowledgeBase) {
+            try {
+                float[] vector = embeddingService.embed(question);
+                chunks.addAll(hybridSearchService.search(question, vector, ragProperties.getTopK()));
+            } catch (Exception ignored) {
+                // Knowledge base is optional in MVP mode; fallback to pure LLM response.
+            }
         }
 
-        KnowledgeChunk toolChunk = tryCallMcpTool(request.getQuestion());
+        KnowledgeChunk toolChunk = tryCallMcpTool(question);
         if (toolChunk != null) {
             chunks.add(0, toolChunk);
         }
@@ -103,25 +131,29 @@ public class ChatServiceImpl implements ChatService {
     }
 
     private KnowledgeChunk tryCallMcpTool(String question) {
-        String toolName = detectTool(question);
-        if (toolName == null || !mcpToolCaller.isToolAvailable(toolName)) {
+        try {
+            String toolName = detectTool(question);
+            if (toolName == null || !mcpToolCaller.isToolAvailable(toolName)) {
+                return null;
+            }
+            Map<String, Object> params = new HashMap<>();
+            params.put("question", question);
+            McpToolCaller.ToolResult result = mcpToolCaller.callTool(toolName, params);
+            if (!result.success()) {
+                return null;
+            }
+            KnowledgeChunk chunk = new KnowledgeChunk();
+            chunk.setChunkId("mcp-" + UUID.randomUUID());
+            chunk.setDocId("mcp-tool-result");
+            chunk.setTitle("MCP Tool Result: " + toolName);
+            chunk.setCategory("realtime-data");
+            chunk.setChunkIndex(0);
+            chunk.setTotalChunks(1);
+            chunk.setContent(result.message() + "\n" + String.valueOf(result.data()));
+            return chunk;
+        } catch (Exception ignored) {
             return null;
         }
-        Map<String, Object> params = new HashMap<>();
-        params.put("question", question);
-        McpToolCaller.ToolResult result = mcpToolCaller.callTool(toolName, params);
-        if (!result.success()) {
-            return null;
-        }
-        KnowledgeChunk chunk = new KnowledgeChunk();
-        chunk.setChunkId("mcp-" + UUID.randomUUID());
-        chunk.setDocId("mcp-tool-result");
-        chunk.setTitle("MCP Tool Result: " + toolName);
-        chunk.setCategory("realtime-data");
-        chunk.setChunkIndex(0);
-        chunk.setTotalChunks(1);
-        chunk.setContent(result.message() + "\n" + String.valueOf(result.data()));
-        return chunk;
     }
 
     private String detectTool(String question) {
@@ -139,5 +171,24 @@ public class ChatServiceImpl implements ChatService {
             return "energy_query";
         }
         return null;
+    }
+
+    private String buildMockAnswer(String question, boolean useKnowledgeBase, List<String> sources) {
+        if (useKnowledgeBase && !sources.isEmpty()) {
+            return "MVP 模拟回答：已收到你的问题「" + question + "」。当前处于 mock 模式，知识库检索已启用，命中来源 " + sources.size() + " 条。";
+        }
+        return "MVP 模拟回答：已收到你的问题「" + question + "」。当前处于 mock 模式，知识库检索未启用。";
+    }
+
+    private List<String> splitByLength(String content, int size) {
+        if (content == null || content.isBlank()) {
+            return List.of();
+        }
+        List<String> parts = new ArrayList<>();
+        for (int i = 0; i < content.length(); i += size) {
+            int end = Math.min(content.length(), i + size);
+            parts.add(content.substring(i, end));
+        }
+        return parts;
     }
 }

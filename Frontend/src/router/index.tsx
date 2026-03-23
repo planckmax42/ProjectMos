@@ -15,6 +15,7 @@ const ReportGenerate = lazy(() => import('@/pages/report/ReportGenerate'));
 const ScheduledReport = lazy(() => import('@/pages/report/ScheduledReport'));
 const BuildingList = lazy(() => import('@/pages/building/BuildingList'));
 const DeviceManagement = lazy(() => import('@/pages/building/DeviceManagement'));
+const SmartOps = lazy(() => import('@/pages/ai/SmartOps'));
 const Settings = lazy(() => import('@/pages/Settings'));
 const Login = lazy(() => import('@/pages/Login'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
@@ -115,6 +116,10 @@ export const router = createBrowserRouter([
             element: lazyLoad(DeviceManagement),
           },
         ],
+      },
+      {
+        path: 'ai/smart-ops',
+        element: lazyLoad(SmartOps),
       },
       {
         path: 'settings',

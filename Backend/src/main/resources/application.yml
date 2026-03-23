@@ -30,3 +30,30 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+bems:
+  ai:
+    mock: ${BEMS_AI_MOCK:false}
+    enable-knowledge-base: ${BEMS_AI_ENABLE_KB:false}
+  deepseek:
+    base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com/v1}
+    api-key: ${DEEPSEEK_API_KEY:}
+    model: ${DEEPSEEK_MODEL:deepseek-chat}
+    temperature: ${DEEPSEEK_TEMPERATURE:0.2}
+    max-tokens: ${DEEPSEEK_MAX_TOKENS:1024}
+  dashscope:
+    base-url: ${DASHSCOPE_BASE_URL:https://dashscope.aliyuncs.com}
+    api-key: ${DASHSCOPE_API_KEY:}
+    model: ${DASHSCOPE_MODEL:text-embedding-v3}
+    dimension: ${DASHSCOPE_DIMENSION:1024}
+  rag:
+    index-name: ${BEMS_RAG_INDEX:energy-knowledge}
+    top-k: ${BEMS_RAG_TOP_K:5}
+    chunk-size: ${BEMS_RAG_CHUNK_SIZE:500}
+    chunk-overlap: ${BEMS_RAG_CHUNK_OVERLAP:100}
+    score-threshold: ${BEMS_RAG_SCORE_THRESHOLD:0.2}
+    max-conversation-turns: ${BEMS_RAG_MAX_TURNS:10}
+  elasticsearch:
+    host: ${BEMS_ES_HOST:localhost}
+    port: ${BEMS_ES_PORT:9200}
+    scheme: ${BEMS_ES_SCHEME:http}

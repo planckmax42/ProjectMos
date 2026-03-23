@@ -15,6 +15,7 @@ import {
   DatabaseOutlined,
   AlertOutlined,
   BuildOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
@@ -103,6 +104,11 @@ const MainLayout: React.FC = () => {
           label: '设备管理',
         },
       ],
+    },
+    {
+      key: '/ai/smart-ops',
+      icon: <RobotOutlined />,
+      label: '智慧问答',
     },
     {
       key: '/settings',

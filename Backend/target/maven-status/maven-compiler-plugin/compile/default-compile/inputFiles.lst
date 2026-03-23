@@ -1,4 +1,5 @@
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/BackendApplication.java
+/home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/ai/config/AiProperties.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/ai/config/DashScopeProperties.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/ai/config/DeepSeekProperties.java
 /home/crane/桌面/GitMyself/ProjectMos/Backend/src/main/java/org/example/backend/ai/config/ElasticsearchConfig.java

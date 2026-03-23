@@ -4,10 +4,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "bems.dashscope")
 public class DashScopeProperties {
-    private String baseUrl;
-    private String apiKey;
-    private String model;
-    private int dimension;
+    private String baseUrl = "https://dashscope.aliyuncs.com";
+    private String apiKey = "";
+    private String model = "text-embedding-v3";
+    private int dimension = 1024;
 
     public String getBaseUrl() { return baseUrl; }
     public void setBaseUrl(String baseUrl) { this.baseUrl = baseUrl; }

@@ -35,6 +35,7 @@ org/example/backend/ai/prompt/PromptTemplateManager.class
 org/example/backend/controller/ReportController.class
 org/example/backend/ai/mcp/ExternalMcpToolClient.class
 org/example/backend/dto/TimeSummaryDto.class
+org/example/backend/ai/config/AiProperties.class
 org/example/backend/repository/EnergyRecordRepository.class
 org/example/backend/repository/BuildingRepository.class
 org/example/backend/ai/service/impl/KnowledgeBaseServiceImpl.class

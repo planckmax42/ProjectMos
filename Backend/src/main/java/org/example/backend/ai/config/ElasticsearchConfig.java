@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties({DeepSeekProperties.class, DashScopeProperties.class, RagProperties.class})
+@EnableConfigurationProperties({AiProperties.class, DeepSeekProperties.class, DashScopeProperties.class, RagProperties.class})
 public class ElasticsearchConfig {
 
     @Bean(destroyMethod = "close")
     public RestClient restClient(
-            @Value("${bems.elasticsearch.host}") String host,
-            @Value("${bems.elasticsearch.port}") int port,
+            @Value("${bems.elasticsearch.host:localhost}") String host,
+            @Value("${bems.elasticsearch.port:9200}") int port,
             @Value("${bems.elasticsearch.scheme:http}") String scheme) {
         return RestClient.builder(new HttpHost(host, port, scheme)).build();
     }

@@ -4,11 +4,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "bems.deepseek")
 public class DeepSeekProperties {
-    private String baseUrl;
-    private String apiKey;
-    private String model;
-    private double temperature;
-    private int maxTokens;
+    private String baseUrl = "https://api.deepseek.com/v1";
+    private String apiKey = "";
+    private String model = "deepseek-chat";
+    private double temperature = 0.2;
+    private int maxTokens = 1024;
 
     public String getBaseUrl() { return baseUrl; }
     public void setBaseUrl(String baseUrl) { this.baseUrl = baseUrl; }

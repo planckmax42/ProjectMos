@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
           setSelectedBuilding(res.data[0].id);
         }
       }
-    }).catch(err => {
+    }).catch(() => {
       message.error('获取建筑列表失败');
     });
   }, []);

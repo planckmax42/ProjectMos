@@ -28,6 +28,7 @@ public class DeepSeekClient implements LlmClient {
     @SuppressWarnings("unchecked")
     @Override
     public String sendMessage(List<LlmMessage> messages) {
+        validateApiKey();
         Map<String, Object> request = baseRequest(messages);
         request.put("stream", false);
         Map<String, Object> response = webClient.post()
@@ -60,6 +61,7 @@ public class DeepSeekClient implements LlmClient {
 
     @Override
     public Flux<String> streamMessage(List<LlmMessage> messages) {
+        validateApiKey();
         Map<String, Object> request = baseRequest(messages);
         request.put("stream", true);
         return webClient.post()
@@ -103,6 +105,12 @@ public class DeepSeekClient implements LlmClient {
             return content.isMissingNode() || content.isNull() ? "" : content.asText("");
         } catch (Exception ex) {
             return "";
+        }
+    }
+
+    private void validateApiKey() {
+        if (properties.getApiKey() == null || properties.getApiKey().isBlank()) {
+            throw new IllegalStateException("DEEPSEEK_API_KEY is not configured");
         }
     }
 }
