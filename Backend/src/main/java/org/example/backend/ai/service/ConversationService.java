@@ -1,7 +1,7 @@
-package com.bems.ai.service;
+package org.example.backend.ai.service;
 
-import com.bems.ai.model.dto.ConversationVO;
-import com.bems.ai.model.entity.ConversationMessage;
+import org.example.backend.ai.model.dto.ConversationVO;
+import org.example.backend.ai.model.entity.ConversationMessage;
 
 import java.util.List;
 

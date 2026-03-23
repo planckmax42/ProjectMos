@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { energyApi } from '@/api/energy';
 import { reportApi } from '@/api/report';
 import type {
-  EnergyRecord, EnergyRecordRequest, Building, MonitorDevice, PageResponse
+  EnergyRecord, EnergyRecordRequest, Building, MonitorDevice
 } from '@/types/api';
 
 const { RangePicker } = DatePicker;
@@ -132,7 +132,7 @@ const EnergyRecords: React.FC = () => {
 
   // 删除记录 - 注意：后端可能没有删除接口
   const handleDelete = async (id: number) => {
-    message.warning('删除功能暂未实现');
+    message.warning(`删除功能暂未实现（记录ID: ${id}）`);
   };
 
   // 导出数据
@@ -227,8 +227,8 @@ const EnergyRecords: React.FC = () => {
       dataIndex: 'deviceStatus',
       key: 'deviceStatus',
       width: 100,
-      render: (status) => {
-        const config = {
+      render: (status: EnergyRecord['deviceStatus']) => {
+        const config: Record<NonNullable<EnergyRecord['deviceStatus']>, { color: string; text: string }> = {
           NORMAL: { color: 'green', text: '正常' },
           ABNORMAL: { color: 'orange', text: '异常' },
         };

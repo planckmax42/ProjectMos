@@ -1,4 +1,4 @@
-package com.bems.ai.config;
+package org.example.backend.ai.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

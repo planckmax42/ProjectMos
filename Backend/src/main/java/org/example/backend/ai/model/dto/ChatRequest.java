@@ -1,4 +1,4 @@
-package com.bems.ai.model.dto;
+package org.example.backend.ai.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

@@ -1,6 +1,6 @@
-package com.bems.ai.retrieval;
+package org.example.backend.ai.retrieval;
 
-import com.bems.ai.model.es.KnowledgeChunk;
+import org.example.backend.ai.model.es.KnowledgeChunk;
 
 import java.util.List;
 

@@ -1,18 +1,18 @@
-package com.bems.ai.service.impl;
+package org.example.backend.ai.service.impl;
 
-import com.bems.ai.config.RagProperties;
-import com.bems.ai.llm.LlmClient;
-import com.bems.ai.mcp.McpToolCaller;
-import com.bems.ai.model.dto.ChatRequest;
-import com.bems.ai.model.dto.ChatResponse;
-import com.bems.ai.model.dto.ChatStreamEvent;
-import com.bems.ai.model.entity.ConversationMessage;
-import com.bems.ai.model.es.KnowledgeChunk;
-import com.bems.ai.prompt.RagPromptBuilder;
-import com.bems.ai.retrieval.EmbeddingService;
-import com.bems.ai.retrieval.HybridSearchService;
-import com.bems.ai.service.ChatService;
-import com.bems.ai.service.ConversationService;
+import org.example.backend.ai.config.RagProperties;
+import org.example.backend.ai.llm.LlmClient;
+import org.example.backend.ai.mcp.McpToolCaller;
+import org.example.backend.ai.model.dto.ChatRequest;
+import org.example.backend.ai.model.dto.ChatResponse;
+import org.example.backend.ai.model.dto.ChatStreamEvent;
+import org.example.backend.ai.model.entity.ConversationMessage;
+import org.example.backend.ai.model.es.KnowledgeChunk;
+import org.example.backend.ai.prompt.RagPromptBuilder;
+import org.example.backend.ai.retrieval.EmbeddingService;
+import org.example.backend.ai.retrieval.HybridSearchService;
+import org.example.backend.ai.service.ChatService;
+import org.example.backend.ai.service.ConversationService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 

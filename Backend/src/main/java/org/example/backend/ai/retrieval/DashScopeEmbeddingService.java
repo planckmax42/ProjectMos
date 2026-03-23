@@ -1,6 +1,6 @@
-package com.bems.ai.retrieval;
+package org.example.backend.ai.retrieval;
 
-import com.bems.ai.config.DashScopeProperties;
+import org.example.backend.ai.config.DashScopeProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -1,4 +1,4 @@
-package com.bems.ai.llm;
+package org.example.backend.ai.llm;
 
 import reactor.core.publisher.Flux;
 

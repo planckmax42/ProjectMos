@@ -3,15 +3,16 @@ import {
   Card, Upload, Button, message, Alert, Table, Tag, Space, Progress, Typography
 } from 'antd';
 import {
-  InboxOutlined, CloudUploadOutlined, FileTextOutlined,
+  InboxOutlined, FileTextOutlined,
   CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined
 } from '@ant-design/icons';
-import type { UploadProps, ColumnsType } from 'antd/es/table';
+import type { UploadProps } from 'antd/es/upload';
+import type { ColumnsType } from 'antd/es/table';
 import type { RcFile } from 'antd/es/upload';
 import { energyApi } from '@/api/energy';
 
 const { Dragger } = Upload;
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface ImportResult {
   fileName: string;
@@ -50,9 +51,12 @@ const EnergyImport: React.FC = () => {
       const result = await energyApi.importCsv(file);
       setCurrentProgress(100);
 
-      if (result.success && result.data) {
-        const { imported, failed, errors } = result.data;
-        const totalRows = imported + failed;
+      if (result.code === 0) {
+        // 后端当前返回字符串消息：成功导入 X 条记录
+        const imported = Number((result.data || '').match(/\d+/)?.[0] || 0);
+        const failed = 0;
+        const errors: string[] = [];
+        const totalRows = imported;
 
         let status: 'success' | 'error' | 'partial' = 'success';
         if (failed > 0 && imported === 0) {
@@ -116,8 +120,8 @@ const EnergyImport: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => {
-        const config = {
+      render: (status: ImportResult['status']) => {
+        const config: Record<ImportResult['status'], { color: string; text: string; icon: React.ReactNode }> = {
           success: { color: 'success', text: '成功', icon: <CheckCircleOutlined /> },
           error: { color: 'error', text: '失败', icon: <CloseCircleOutlined /> },
           partial: { color: 'warning', text: '部分成功', icon: <CheckCircleOutlined /> },
@@ -186,13 +190,12 @@ const EnergyImport: React.FC = () => {
       'buildingId',
       'deviceId',
       'recordTime',
-      'electricityConsumption',
-      'waterConsumption',
-      'hvacEnergyConsumption',
+      'electricityKwh',
+      'waterM3',
+      'hvacKwh',
       'hvacSupplyTemp',
       'hvacReturnTemp',
-      'outdoorTemp',
-      'indoorTemp',
+      'envTemperature',
       'humidity',
       'occupancyDensity',
       'deviceStatus'
@@ -207,7 +210,6 @@ const EnergyImport: React.FC = () => {
       '80.2',
       '7.0',
       '12.0',
-      '5.0',
       '22.0',
       '60.0',
       '0.8',

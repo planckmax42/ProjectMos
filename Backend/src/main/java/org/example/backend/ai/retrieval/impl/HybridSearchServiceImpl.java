@@ -1,11 +1,11 @@
-package com.bems.ai.retrieval.impl;
+package org.example.backend.ai.retrieval.impl;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import com.bems.ai.config.RagProperties;
-import com.bems.ai.model.es.KnowledgeChunk;
-import com.bems.ai.retrieval.HybridSearchService;
+import org.example.backend.ai.config.RagProperties;
+import org.example.backend.ai.model.es.KnowledgeChunk;
+import org.example.backend.ai.retrieval.HybridSearchService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

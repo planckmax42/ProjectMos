@@ -1,4 +1,4 @@
-package com.bems.ai.config;
+package org.example.backend.ai.config;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;

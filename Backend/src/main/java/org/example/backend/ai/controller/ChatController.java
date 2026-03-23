@@ -1,9 +1,9 @@
-package com.bems.ai.controller;
+package org.example.backend.ai.controller;
 
-import com.bems.ai.model.dto.ChatRequest;
-import com.bems.ai.model.dto.ChatResponse;
-import com.bems.ai.model.dto.ChatStreamEvent;
-import com.bems.ai.service.ChatService;
+import org.example.backend.ai.model.dto.ChatRequest;
+import org.example.backend.ai.model.dto.ChatResponse;
+import org.example.backend.ai.model.dto.ChatStreamEvent;
+import org.example.backend.ai.service.ChatService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;

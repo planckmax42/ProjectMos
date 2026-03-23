@@ -1,4 +1,4 @@
-package com.bems.ai.model.entity;
+package org.example.backend.ai.model.entity;
 
 import jakarta.persistence.*;
 

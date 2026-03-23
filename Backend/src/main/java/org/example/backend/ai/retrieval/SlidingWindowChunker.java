@@ -1,6 +1,6 @@
-package com.bems.ai.retrieval;
+package org.example.backend.ai.retrieval;
 
-import com.bems.ai.config.RagProperties;
+import org.example.backend.ai.config.RagProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

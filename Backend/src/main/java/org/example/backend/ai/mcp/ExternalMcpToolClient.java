@@ -1,4 +1,4 @@
-package com.bems.ai.mcp;
+package org.example.backend.ai.mcp;
 
 import java.util.Map;
 

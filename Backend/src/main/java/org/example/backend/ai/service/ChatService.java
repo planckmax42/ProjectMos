@@ -1,8 +1,8 @@
-package com.bems.ai.service;
+package org.example.backend.ai.service;
 
-import com.bems.ai.model.dto.ChatRequest;
-import com.bems.ai.model.dto.ChatResponse;
-import com.bems.ai.model.dto.ChatStreamEvent;
+import org.example.backend.ai.model.dto.ChatRequest;
+import org.example.backend.ai.model.dto.ChatResponse;
+import org.example.backend.ai.model.dto.ChatStreamEvent;
 import reactor.core.publisher.Flux;
 
 public interface ChatService {

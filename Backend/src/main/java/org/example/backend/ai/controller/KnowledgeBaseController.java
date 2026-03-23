@@ -1,7 +1,7 @@
-package com.bems.ai.controller;
+package org.example.backend.ai.controller;
 
-import com.bems.ai.model.dto.KnowledgeDocumentVO;
-import com.bems.ai.service.KnowledgeBaseService;
+import org.example.backend.ai.model.dto.KnowledgeDocumentVO;
+import org.example.backend.ai.service.KnowledgeBaseService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

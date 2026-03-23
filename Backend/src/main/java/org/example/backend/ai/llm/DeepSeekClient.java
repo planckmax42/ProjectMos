@@ -1,8 +1,8 @@
-package com.bems.ai.llm;
+package org.example.backend.ai.llm;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.bems.ai.config.DeepSeekProperties;
+import org.example.backend.ai.config.DeepSeekProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

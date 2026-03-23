@@ -1,8 +1,8 @@
-package com.bems.ai.controller;
+package org.example.backend.ai.controller;
 
-import com.bems.ai.model.dto.ConversationVO;
-import com.bems.ai.model.entity.ConversationMessage;
-import com.bems.ai.service.ConversationService;
+import org.example.backend.ai.model.dto.ConversationVO;
+import org.example.backend.ai.model.entity.ConversationMessage;
+import org.example.backend.ai.service.ConversationService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

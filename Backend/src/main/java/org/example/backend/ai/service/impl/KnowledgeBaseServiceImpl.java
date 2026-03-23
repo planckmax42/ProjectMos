@@ -1,14 +1,14 @@
-package com.bems.ai.service.impl;
+package org.example.backend.ai.service.impl;
 
-import com.bems.ai.model.dto.KnowledgeDocumentVO;
-import com.bems.ai.model.entity.KnowledgeDocument;
-import com.bems.ai.model.es.KnowledgeChunk;
-import com.bems.ai.repository.KnowledgeDocumentRepository;
-import com.bems.ai.retrieval.ChunkingStrategy;
-import com.bems.ai.retrieval.DocumentProcessor;
-import com.bems.ai.retrieval.EmbeddingService;
-import com.bems.ai.retrieval.KnowledgeIndexService;
-import com.bems.ai.service.KnowledgeBaseService;
+import org.example.backend.ai.model.dto.KnowledgeDocumentVO;
+import org.example.backend.ai.model.entity.KnowledgeDocument;
+import org.example.backend.ai.model.es.KnowledgeChunk;
+import org.example.backend.ai.repository.KnowledgeDocumentRepository;
+import org.example.backend.ai.retrieval.ChunkingStrategy;
+import org.example.backend.ai.retrieval.DocumentProcessor;
+import org.example.backend.ai.retrieval.EmbeddingService;
+import org.example.backend.ai.retrieval.KnowledgeIndexService;
+import org.example.backend.ai.service.KnowledgeBaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

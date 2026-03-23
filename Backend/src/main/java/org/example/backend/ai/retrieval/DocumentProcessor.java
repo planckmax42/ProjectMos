@@ -1,4 +1,4 @@
-package com.bems.ai.retrieval;
+package org.example.backend.ai.retrieval;
 
 import org.springframework.web.multipart.MultipartFile;
 

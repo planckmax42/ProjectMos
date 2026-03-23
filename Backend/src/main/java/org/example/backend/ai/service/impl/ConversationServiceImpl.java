@@ -1,9 +1,9 @@
-package com.bems.ai.service.impl;
+package org.example.backend.ai.service.impl;
 
-import com.bems.ai.model.dto.ConversationVO;
-import com.bems.ai.model.entity.ConversationMessage;
-import com.bems.ai.repository.ConversationMessageRepository;
-import com.bems.ai.service.ConversationService;
+import org.example.backend.ai.model.dto.ConversationVO;
+import org.example.backend.ai.model.entity.ConversationMessage;
+import org.example.backend.ai.repository.ConversationMessageRepository;
+import org.example.backend.ai.service.ConversationService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

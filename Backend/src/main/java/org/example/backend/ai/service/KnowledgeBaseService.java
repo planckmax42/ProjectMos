@@ -1,6 +1,6 @@
-package com.bems.ai.service;
+package org.example.backend.ai.service;
 
-import com.bems.ai.model.dto.KnowledgeDocumentVO;
+import org.example.backend.ai.model.dto.KnowledgeDocumentVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

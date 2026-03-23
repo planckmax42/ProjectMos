@@ -1,4 +1,4 @@
-package com.bems.ai.mcp;
+package org.example.backend.ai.mcp;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;

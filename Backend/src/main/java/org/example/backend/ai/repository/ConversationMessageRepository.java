@@ -1,7 +1,7 @@
-package com.bems.ai.repository;
+package org.example.backend.ai.repository;
 
-import com.bems.ai.model.dto.ConversationVO;
-import com.bems.ai.model.entity.ConversationMessage;
+import org.example.backend.ai.model.dto.ConversationVO;
+import org.example.backend.ai.model.entity.ConversationMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +13,7 @@ public interface ConversationMessageRepository extends JpaRepository<Conversatio
     List<ConversationMessage> findByConversationIdOrderByCreatedAtAsc(String conversationId);
 
     @Query("""
-            select new com.bems.ai.model.dto.ConversationVO(m.conversationId, max(m.createdAt), count(m.id))
+            select new org.example.backend.ai.model.dto.ConversationVO(m.conversationId, max(m.createdAt), count(m.id))
             from ConversationMessage m
             group by m.conversationId
             order by max(m.createdAt) desc

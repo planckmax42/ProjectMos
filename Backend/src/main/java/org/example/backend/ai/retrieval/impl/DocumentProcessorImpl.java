@@ -1,6 +1,6 @@
-package com.bems.ai.retrieval.impl;
+package org.example.backend.ai.retrieval.impl;
 
-import com.bems.ai.retrieval.DocumentProcessor;
+import org.example.backend.ai.retrieval.DocumentProcessor;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;

@@ -1,4 +1,4 @@
-package com.bems.ai.model.es;
+package org.example.backend.ai.model.es;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

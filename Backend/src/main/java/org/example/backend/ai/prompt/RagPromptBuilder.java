@@ -1,8 +1,8 @@
-package com.bems.ai.prompt;
+package org.example.backend.ai.prompt;
 
-import com.bems.ai.llm.LlmMessage;
-import com.bems.ai.model.entity.ConversationMessage;
-import com.bems.ai.model.es.KnowledgeChunk;
+import org.example.backend.ai.llm.LlmMessage;
+import org.example.backend.ai.model.entity.ConversationMessage;
+import org.example.backend.ai.model.es.KnowledgeChunk;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

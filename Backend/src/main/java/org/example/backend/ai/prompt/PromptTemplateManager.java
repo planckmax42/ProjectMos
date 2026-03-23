@@ -1,4 +1,4 @@
-package com.bems.ai.prompt;
+package org.example.backend.ai.prompt;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
