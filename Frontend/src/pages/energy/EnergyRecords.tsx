@@ -11,7 +11,7 @@ import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { energyApi } from '@/api/energy';
 import { reportApi } from '@/api/report';
-import {
+import type {
   EnergyRecord, EnergyRecordRequest, Building, MonitorDevice, PageResponse
 } from '@/types/api';
 

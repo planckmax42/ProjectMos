@@ -4,9 +4,12 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import ReactECharts from 'echarts-for-react';
 import type { EChartsOption } from 'echarts';
 import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { statisticsApi } from '@/api/statistics';
-import { buildingApi } from '@/api/common';
+import { energyApi } from '@/api/energy';
 import type { Building } from '@/types/api';
+
+dayjs.extend(weekOfYear);
 
 const { RangePicker } = DatePicker;
 
@@ -39,8 +42,8 @@ const TrendAnalysis: React.FC = () => {
 
   // 获取建筑列表
   useEffect(() => {
-    buildingApi.getAll().then(res => {
-      if (res.success && res.data) {
+    energyApi.getBuildings().then(res => {
+      if (res.code === 0 && res.data) {
         setBuildings(res.data);
         if (res.data.length > 0) {
           setSelectedBuilding(res.data[0].id);
@@ -61,20 +64,54 @@ const TrendAnalysis: React.FC = () => {
     setLoading(true);
     try {
       const [startTime, endTime] = dateRange;
-      const params = {
-        buildingId: selectedBuilding,
-        startTime: startTime.format('YYYY-MM-DD HH:mm:ss'),
-        endTime: endTime.format('YYYY-MM-DD HH:mm:ss'),
-        energyType,
-        interval,
+
+      // 映射前端的 interval 到后端的 granularity
+      const granularityMap: Record<TimeInterval, 'hour' | 'day' | 'month'> = {
+        'HOUR': 'hour',
+        'DAY': 'day',
+        'WEEK': 'day', // 周视图使用日数据后聚合
+        'MONTH': 'month',
       };
 
-      const res = await statisticsApi.getEnergyTrend(params);
-      if (res.success && res.data) {
-        setTrendData(res.data);
+      const params = {
+        buildingId: selectedBuilding,
+        start: startTime.format('YYYY-MM-DDTHH:mm:ss'),
+        end: endTime.format('YYYY-MM-DDTHH:mm:ss'),
+        granularity: granularityMap[interval],
+      };
+
+      const res = await statisticsApi.getTimeSummary(params);
+      if (res.code === 0 && res.data) {
+        // 将后端的 TimeSummaryDto[] 转换为前端需要的格式
+        const timestamps = res.data.map(item => item.timeBucket);
+
+        // 根据 energyType 选择对应的值
+        const values = res.data.map(item => {
+          switch (energyType) {
+            case 'ELECTRICITY': return item.electricityKwh;
+            case 'WATER': return item.waterM3;
+            case 'HVAC': return item.hvacKwh;
+            default: return 0;
+          }
+        });
+
+        // 计算趋势
+        let trend: 'UP' | 'DOWN' | 'STABLE' = 'STABLE';
+        let changeRate = 0;
+
+        if (values.length >= 2) {
+          const first = values[0];
+          const last = values[values.length - 1];
+          if (first > 0) {
+            changeRate = ((last - first) / first) * 100;
+            if (changeRate > 5) trend = 'UP';
+            else if (changeRate < -5) trend = 'DOWN';
+          }
+        }
+
+        setTrendData({ timestamps, values, trend, changeRate });
 
         // 计算对比数据
-        const values = res.data.values;
         if (values.length > 1) {
           const mid = Math.floor(values.length / 2);
           const firstHalf = values.slice(0, mid);
