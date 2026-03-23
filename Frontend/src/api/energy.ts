@@ -34,6 +34,11 @@ export const energyApi = {
     return request.put(`${BASE_URL}/records/${id}`, data);
   },
 
+  // 删除能耗记录 - DELETE /api/energy/records/{id}
+  deleteRecord(id: number): Promise<ApiResponse<string>> {
+    return request.delete(`${BASE_URL}/records/${id}`);
+  },
+
   // 查询能耗记录（分页）- GET /api/energy/records
   queryRecords(params: EnergyRecordQuery): Promise<ApiResponse<PageResponse<EnergyRecord>>> {
     return request.get(`${BASE_URL}/records`, { params });

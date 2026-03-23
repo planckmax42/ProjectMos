@@ -55,6 +55,13 @@ EnergyController {
         return ApiResponse.success(energyService.updateRecord(id, request));
     }
 
+    @DeleteMapping("/records/{id}")
+    @Operation(summary = "删除能耗记录")
+    public ApiResponse<String> deleteRecord(@PathVariable Long id) {
+        energyService.deleteRecord(id);
+        return ApiResponse.success("删除成功");
+    }
+
     @GetMapping("/records")
     @Operation(summary = "查询能耗记录")
     public ApiResponse<Page<EnergyRecord>> queryRecords(

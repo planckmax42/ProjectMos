@@ -74,6 +74,14 @@ public class EnergyService {
         return recordRepository.save(record);
     }
 
+    @Transactional
+    public void deleteRecord(Long id) {
+        if (!recordRepository.existsById(id)) {
+            throw new IllegalArgumentException("记录不存在: " + id);
+        }
+        recordRepository.deleteById(id);
+    }
+
     public Page<EnergyRecord> queryRecords(
             Long buildingId,
             Long deviceId,

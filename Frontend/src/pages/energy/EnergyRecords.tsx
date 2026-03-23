@@ -130,9 +130,20 @@ const EnergyRecords: React.FC = () => {
     }
   };
 
-  // 删除记录 - 注意：后端可能没有删除接口
+  // 删除记录
   const handleDelete = async (id: number) => {
-    message.warning(`删除功能暂未实现（记录ID: ${id}）`);
+    try {
+      await energyApi.deleteRecord(id);
+      message.success('删除成功');
+
+      const isLastRowOnPage = data.length === 1;
+      const shouldFallbackPage = isLastRowOnPage && pagination.current > 1;
+      const targetPage = shouldFallbackPage ? pagination.current - 1 : pagination.current;
+
+      fetchRecords(targetPage, pagination.pageSize);
+    } catch (error) {
+      message.error('删除失败');
+    }
   };
 
   // 导出数据
