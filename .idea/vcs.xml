@@ -2,7 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Database/Genome Project/building-data-genome-project-2" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Database/sikong" vcs="Git" />
   </component>
 </project>
